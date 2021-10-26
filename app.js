@@ -4,6 +4,7 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const app = express()
 const exphbs = require('express-handlebars')
+const methodOverride = require('method-override')
 const routes = require('./routes/index')
 require('./config/mongoose')
 
@@ -21,6 +22,7 @@ app.engine(
 )
 app.set('view engine', 'hbs')
 app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride('_method'))
 app.use(routes)
 app.listen(3000, () => {
   console.log('app runs in http://localhost:3000/')

@@ -33,21 +33,6 @@ router.get('/', async (req, res) => {
       total += record.amount
     }
     res.render('index', { record: records, total })
-
-    // Record.find()
-    //   .lean()
-    //   .then(async (record) => {
-    //     let total
-    //     await Record.aggregate([
-    //       { $group: { _id: null, sum: { $sum: '$amount' } } },
-    //     ]).then((data) => {
-    //       if (data.length !== 0) {
-    //         total = data[0].sum
-    //       }
-    //     })
-    //     res.render('index', { record, total })
-    //   })
-    //   .catch((err) => console.log(err))
   }
 })
 
