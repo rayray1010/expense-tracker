@@ -44,6 +44,6 @@ app.use((req, res, next) => {
 })
 app.use(routes)
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log('app runs in http://localhost:3000/')
 })
