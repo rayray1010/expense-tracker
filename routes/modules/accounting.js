@@ -11,7 +11,6 @@ router.post('/new', async (req, res) => {
   const { name, date, amount, title } = req.body
   const category = await Category.findOne({ title }).lean()
   const categoryID = category._id
-  console.log(categoryID)
   Record.create({ name, date, amount, categoryID })
     .then(() => res.redirect('/'))
     .catch((err) => console.log(err))
@@ -34,6 +33,14 @@ router.put('/:id', async (req, res) => {
   Record.findByIdAndUpdate({ _id }, { name, date, amount, categoryID }).then(
     () => res.redirect('/')
   )
+})
+
+router.delete('/:id', (req, res) => {
+  const _id = req.params.id
+  Record.findOne({ _id })
+    .then((record) => record.remove())
+    .then(() => res.redirect('/'))
+    .catch((err) => console.log(err))
 })
 
 module.exports = router

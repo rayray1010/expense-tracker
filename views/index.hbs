@@ -30,8 +30,32 @@
           <div class="col-6"><i class="{{this.icon}}"><span class="ms-1">{{this.name}}</span></i></div>
           <div class="col-4">{{this.amount}}</div>
           <div class="col-2">
-            <a href="/accounts/{{this._id}}/edit">修改</a>
-            <a href="">刪除</a>
+            <a class="btn btn-sm btn-outline-primary mr-1 mb-1" href="/accounts/{{this._id}}/edit"
+              role="button">edit</a>
+            <button type="button" class="btn btn-sm btn-outline-danger mr-1 mb-1" data-bs-toggle="modal"
+              data-bs-target="#delete">
+              delete
+            </button>
+            {{!-- delete alert --}}
+            <div class="modal fade" id="delete" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Warning!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    確定要將 {{this.name}} 刪除？
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="/accounts/{{this._id}}?_method=DELETE" method="POST">
+                      <button type="submit" class="btn btn-danger">刪除</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
       </li>
       {{/each}}
