@@ -4,36 +4,29 @@ const Record = require('../../models/record')
 const Category = require('../../models/category')
 
 router.get('/', async (req, res) => {
-  sort = req.query
-  if (Object.keys(sort).length !== 0 && sort.sort !== '.') {
-    Category.findOne({ title: sort.sort }).then(async (data) => {
-      let total = 0
-      await Record.aggregate([
-        { $match: { categoryID: data._id } },
-        { $group: { _id: null, sum: { $sum: '$amount' } } },
-      ]).then((sum) => {
-        if (sum.length !== 0) {
-          total = sum[0].sum
-        }
-      })
-      const records = await Record.find({ categoryID: data._id })
-        .populate('categoryID', 'font')
-        .lean()
-      for (let record of records) {
-        record.icon = record.categoryID.font
-      }
-      console.log(records)
-      res.render('index', { record: records, total, sort: sort.sort })
+  let total = 0
+  const userID = req.user._id
+  const filter = req.query.filter
+  if (filter !== '.' && filter !== undefined) {
+    const category = await Category.findOne({ title: filter }).lean()
+    const categoryID = category._id
+    const record = await Record.find({ userID, categoryID })
+      .populate('categoryID', 'font')
+      .lean()
+    record.map((item) => {
+      total += item.amount
+      item.icon = item.categoryID.font
     })
-  } else {
-    let total = 0
-    const records = await Record.find().populate('categoryID', 'font').lean()
-    for (let record of records) {
-      record.icon = record.categoryID.font
-      total += record.amount
-    }
-    res.render('index', { record: records, total })
+    return res.render('index', { record, filter, total })
   }
+  const record = await Record.find({ userID })
+    .populate('categoryID', 'font')
+    .lean()
+  record.map((item) => {
+    total += item.amount
+    item.icon = item.categoryID.font
+  })
+  return res.render('index', { record, total })
 })
 
 module.exports = router
