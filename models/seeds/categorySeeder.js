@@ -27,8 +27,9 @@ const seed = [
   },
 ]
 
-db.once('open', () => {
-  Category.create(seed)
+db.once('open', async () => {
+  await Category.create(seed)
     .then(() => console.log('done'))
     .catch((err) => console.log(err))
+  process.exit()
 })

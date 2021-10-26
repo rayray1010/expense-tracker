@@ -4,7 +4,7 @@ const Record = require('../../models/record')
 const Category = require('../../models/category')
 
 router.get('/', async (req, res) => {
-  let total = 0
+  let totalAmount = 0
   const userID = req.user._id
   const filter = req.query.filter
   if (filter !== '.' && filter !== undefined) {
@@ -14,19 +14,19 @@ router.get('/', async (req, res) => {
       .populate('categoryID', 'font')
       .lean()
     record.map((item) => {
-      total += item.amount
+      totalAmount += item.amount
       item.icon = item.categoryID.font
     })
-    return res.render('index', { record, filter, total })
+    return res.render('index', { record, filter, totalAmount })
   }
   const record = await Record.find({ userID })
     .populate('categoryID', 'font')
     .lean()
   record.map((item) => {
-    total += item.amount
+    totalAmount += item.amount
     item.icon = item.categoryID.font
   })
-  return res.render('index', { record, total })
+  return res.render('index', { record, totalAmount })
 })
 
 module.exports = router

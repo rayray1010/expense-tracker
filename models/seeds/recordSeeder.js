@@ -15,34 +15,8 @@ const userSeed = [
   },
 ]
 
-// db.once('open', async () => {
-//   await Category.find()
-//     .then((category) => {
-//       category.map((data) => {
-//         recordSeed.forEach((recordItem) => {
-//           if (recordItem.title === data.title) {
-//             recordItem.categoryID = data._id
-//           }
-//         })
-//         return category
-//       })
-//     })
-//     .then(async (category) => {
-//       await User.create(userSeed).then((user) => {
-//         recordSeed.forEach((recordItem) => {
-//           recordItem.userID = user[0]._id
-//         })
-//       })
-
-//     })
-//     .then(() => {
-//       Record.create(recordSeed).then(() => console.log('done'))
-//     })
-//     .catch((err) => console.log('err'))
-// })
-
 db.once('open', async () => {
-  bcrypt
+  await bcrypt
     .genSalt(10)
     .then((salt) => bcrypt.hash(userSeed[0].password, salt))
     .then(
@@ -65,8 +39,9 @@ db.once('open', async () => {
           record.categoryID = categoryId
         })
       )
-      Record.create(recordSeed)
+      await Record.create(recordSeed)
     })
     .then(() => console.log('done'))
     .catch((err) => console.log(err))
+  process.exit()
 })
